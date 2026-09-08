@@ -237,8 +237,8 @@ p {
     margin-bottom: 24px;
 }
 </style><script role="script" id="twine-user-script" type="text/twine-javascript">$(document).on(':storyready', function () {
-    // Função de envio oculta via formulário nativo
-    setup.enviarDiretoParaPlanilha = function(urlForm, entryNome, entryPontos, nome, pontos) {
+    // Função de envio oculta via formulário nativo (Versão com 3 campos)
+    setup.enviarDiretoParaPlanilha = function(urlForm, entryNome, entryPontos, entryGabarito, nome, pontos, gabarito) {
         let iframeInvisivel = document.createElement('iframe');
         iframeInvisivel.name = 'googleFormTarget';
         iframeInvisivel.style.display = 'none';
@@ -250,17 +250,26 @@ p {
         formulario.target = 'googleFormTarget';
         formulario.style.display = 'none';
 
+        // Campo 1: Nome
         let inputNome = document.createElement('input');
         inputNome.type = 'hidden';
         inputNome.name = entryNome;
         inputNome.value = nome;
         formulario.appendChild(inputNome);
 
+        // Campo 2: Pontos
         let inputPontos = document.createElement('input');
         inputPontos.type = 'hidden';
         inputPontos.name = entryPontos;
         inputPontos.value = pontos;
         formulario.appendChild(inputPontos);
+
+        // Campo 3: Gabarito Completo de Respostas
+        let inputGabarito = document.createElement('input');
+        inputGabarito.type = 'hidden';
+        inputGabarito.name = entryGabarito;
+        inputGabarito.value = gabarito;
+        formulario.appendChild(inputGabarito);
 
         document.body.appendChild(formulario);
         formulario.submit();
@@ -299,6 +308,8 @@ p {
 ! 🎮 Quiz Conexões: Cuidando da Saúde Mental
 Um jogo interativo sobre empatia, inteligência emocional e acolhimento focado no cotidiano dos estudantes.
 
+Elaborado em conjunto pela Coordenação de Orientação Educacional e pela Psicologia 
+
 Suas decisões somam ou subtraem pontos no **Ranking Global** da escola.
 
 Digite seu Nome e Turma para começar:
@@ -312,28 +323,32 @@ Digite seu Nome e Turma para começar:
 &lt;&lt;set $urlGoogleForm to &quot;https://docs.google.com/forms/d/e/1FAIpQLScy8rYReH7ykoIysOqPOzb--0VyXSZ54NICekLOE1_cjs7Kag/formResponse&quot;&gt;&gt;
 &lt;&lt;set $entryNome to &quot;entry.587358728&quot;&gt;&gt;
 &lt;&lt;set $entryPontos to &quot;entry.1873604591&quot;&gt;&gt;
+&lt;&lt;set $entryGabarito to &quot;entry.837111754&quot;&gt;&gt;
 </tw-passagedata><tw-passagedata pid="3" name="Pergunta1" tags="" position="625,475" size="100,100">:: Pergunta1
 ### Pergunta 1 de 17
 Quando você se sente extremamente sobrecarregado com as tarefas do dia a dia, qual é a melhor atitude a tomar?
 
 &lt;&lt;link &quot;Pausar, respirar fundo e organizar as tarefas por prioridade.&quot;&gt;&gt;
     &lt;&lt;set $pontosEmpatia to $pontosEmpatia + 10&gt;&gt;
-    &lt;&lt;set $feedbackAtual to &quot;Excelente! Fazer uma pausa e organizar as prioridades acalma sua mente. Isso evita que você gaste energia com tudo ao mesmo tempo e protege sua mente do esgotamento.&quot;&gt;&gt;
+    &lt;&lt;set $feedbackAtual to &quot;Excelente! Fazer uma pausa e organizar as prioridades acalma sua mente...&quot;&gt;&gt;
+    &lt;&lt;set $gabaritoAluno to $gabaritoAluno + &quot;Q1:Boa | &quot;&gt;&gt;
     &lt;&lt;goto &quot;Feedback1&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 
 &lt;&lt;link &quot;Continuar fazendo tudo no mesmo ritmo até terminar o que puder.&quot;&gt;&gt;
     &lt;&lt;set $pontosEmpatia to $pontosEmpatia + 0&gt;&gt;
-    &lt;&lt;set $feedbackAtual to &quot;Atenção. Seguir no mesmo ritmo sem descansar funciona por um curto período, mas sobrecarrega o corpo e a mente. O resultado pode ser a exaustão extrema.&quot;&gt;&gt;
+    &lt;&lt;set $feedbackAtual to &quot;Atenção. Seguir no mesmo ritmo sem descansar...&quot;&gt;&gt;
+    &lt;&lt;set $gabaritoAluno to $gabaritoAluno + &quot;Q1:Neutra | &quot;&gt;&gt;
     &lt;&lt;goto &quot;Feedback1&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 
 &lt;&lt;link &quot;Ignorar o cansaço e tomar estimulantes para trabalhar sem parar.&quot;&gt;&gt;
     &lt;&lt;set $pontosEmpatia to $pontosEmpatia - 5&gt;&gt;
-    &lt;&lt;set $feedbackAtual to &quot;Muito perigoso! Mascarar o cansaço com estimulantes cria uma falsa sensação de energia. Isso destrói o seu sono, sobrecarrega o coração e pode desencadear crises severas de ansiedade.&quot;&gt;&gt;
+    &lt;&lt;set $feedbackAtual to &quot;Muito perigoso! Mascarar o cansaço com estimulantes...&quot;&gt;&gt;
+    &lt;&lt;set $gabaritoAluno to $gabaritoAluno + &quot;Q1:Ruim | &quot;&gt;&gt;
     &lt;&lt;goto &quot;Feedback1&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
-</tw-passagedata><tw-passagedata pid="4" name="Feedback1" tags="" position="750,350" size="100,100">### Retorno da Situação 1
+</tw-passagedata><tw-passagedata pid="4" name="Feedback1" tags="" position="750,350" size="100,100">### Feedback de empatia
 
 &lt;div class=&quot;feedback-box&quot;&gt;$feedbackAtual&lt;/div&gt;
 
@@ -345,22 +360,25 @@ Qual hábito contribui positivamente para a saúde mental antes de dormir?
 &lt;&lt;link &quot;Mexer nas redes sociais no celular até sentir os olhos arderem de sono.&quot;&gt;&gt;
     &lt;&lt;set $pontosEmpatia to $pontosEmpatia - 5&gt;&gt;
     &lt;&lt;set $feedbackAtual to &quot;Evite ao máximo! Ficar nas redes sociais até ser vencido pelo cansaço causa hiper estímulo e contribui para acordar exausto e irritado no dia seguinte.&quot;&gt;&gt;
+	&lt;&lt;set $gabaritoAluno to $gabaritoAluno + &quot;Q2:Ruim | &quot;&gt;&gt;
     &lt;&lt;goto &quot;Feedback2&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 
 &lt;&lt;link &quot;Desligar as telas uma hora antes de deitar e relaxar a mente.&quot;&gt;&gt;
     &lt;&lt;set $pontosEmpatia to $pontosEmpatia + 10&gt;&gt;
     &lt;&lt;set $feedbackAtual to &quot;Na mosca! O cérebro precisa de um tempo de transição para entender que a hora de descansar chegou. Criar um ritual do sono melhora o humor e a retenção do que você estudou.&quot;&gt;&gt;
+	&lt;&lt;set $gabaritoAluno to $gabaritoAluno + &quot;Q2:Boa | &quot;&gt;&gt;
     &lt;&lt;goto &quot;Feedback2&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 
 &lt;&lt;link &quot;Deixar a televisão ligada no fundo enquanto tenta pegar no sono.&quot;&gt;&gt;
     &lt;&lt;set $pontosEmpatia to $pontosEmpatia + 0&gt;&gt;
     &lt;&lt;set $feedbackAtual to &quot;Mito! Mesmo que você durma, os estímulos sonoros e luminosos da TV ligada mantêm o seu cérebro em alerta, impedindo o sono profundo e reparador.&quot;&gt;&gt;
+	&lt;&lt;set $gabaritoAluno to $gabaritoAluno + &quot;Q2:Neutra | &quot;&gt;&gt;
     &lt;&lt;goto &quot;Feedback2&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 
-</tw-passagedata><tw-passagedata pid="6" name="Feedback2" tags="" position="875,350" size="100,100">### Retorno da Situação 2
+</tw-passagedata><tw-passagedata pid="6" name="Feedback2" tags="" position="875,350" size="100,100">### Feedback de empatia
 &lt;div class=&quot;feedback-box&quot;&gt;$feedbackAtual&lt;/div&gt;
 
 [[Avançar para a Próxima Pergunta-&gt;Pergunta3]]
@@ -370,47 +388,50 @@ Como devemos lidar com sentimentos difíceis, como a raiva ou a tristeza profund
 &lt;&lt;link &quot;Distrair a mente com outras atividades até que a sensação passe sozinha.&quot;&gt;&gt;
     &lt;&lt;set $pontosEmpatia to $pontosEmpatia + 0&gt;&gt;
     &lt;&lt;set $feedbackAtual to &quot;Cuidado temporário. Usar distrações ajuda no momento da crise, mas não resolve o problema. Se o sentimento não for processado, ele voltará a incomodar mais tarde.&quot;&gt;&gt;
+	&lt;&lt;set $gabaritoAluno to $gabaritoAluno + &quot;Q3:Neutra | &quot;&gt;&gt;
     &lt;&lt;goto &quot;Feedback3&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 
 &lt;&lt;link &quot;Reprimir a emoção totalmente e agir como se tudo estivesse perfeito.&quot;&gt;&gt;
     &lt;&lt;set $pontosEmpatia to $pontosEmpatia - 5&gt;&gt;
     &lt;&lt;set $feedbackAtual to &quot;Prejudicial! Guardar tudo em uma &#39;caixinha&#39; e fingir que está tudo bem cria uma panela de pressão emocional. Cedo ou tarde, isso explode em sintomas físicos ou crises de choro.&quot;&gt;&gt;
-    &lt;&lt;goto &quot;Feedback3&quot;&gt;&gt;
+    &lt;&lt;set $gabaritoAluno to $gabaritoAluno + &quot;Q3:Ruim | &quot;&gt;&gt;
+	&lt;&lt;goto &quot;Feedback3&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 
 &lt;&lt;link &quot;Reconhecer o sentimento, aceitá-lo e buscar formas saudáveis de expressá-lo.&quot;&gt;&gt;
     &lt;&lt;set $pontosEmpatia to $pontosEmpatia + 10&gt;&gt;
     &lt;&lt;set $feedbackAtual to &quot;Isso aí! Validar o que você sente é o pilar da saúde emocional. Sentir raiva ou tristeza é normal e humano; o segredo está em como expressamos isso sem nos machucar.&quot;&gt;&gt;
-    &lt;&lt;goto &quot;Feedback3&quot;&gt;&gt;
+    &lt;&lt;set $gabaritoAluno to $gabaritoAluno + &quot;Q3:Boa | &quot;&gt;&gt;
+	&lt;&lt;goto &quot;Feedback3&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 
 
-</tw-passagedata><tw-passagedata pid="8" name="Feedback3" tags="" position="1000,350" size="100,100">### Retorno da Situação 3
+</tw-passagedata><tw-passagedata pid="8" name="Feedback3" tags="" position="1000,350" size="100,100">### Feedback de empatia
 &lt;div class=&quot;feedback-box&quot;&gt;$feedbackAtual&lt;/div&gt;
 
 [[Avançar para a Próxima Pergunta-&gt;Pergunta4]]
-</tw-passagedata><tw-passagedata pid="9" name="Feedback4" tags="" position="1125,350" size="100,100">### Retorno da Situação 4
+</tw-passagedata><tw-passagedata pid="9" name="Feedback4" tags="" position="1125,350" size="100,100">### Feedback de empatia
 &lt;div class=&quot;feedback-box&quot;&gt;$feedbackAtual&lt;/div&gt;
 
 [[Avançar para a Próxima Pergunta-&gt;Pergunta5]]
-</tw-passagedata><tw-passagedata pid="10" name="Feedback5" tags="" position="1250,350" size="100,100">### Retorno da Situação 5
+</tw-passagedata><tw-passagedata pid="10" name="Feedback5" tags="" position="1250,350" size="100,100">### Feedback de empatia
 &lt;div class=&quot;feedback-box&quot;&gt;$feedbackAtual&lt;/div&gt;
 
 [[Avançar para a Próxima Pergunta-&gt;Pergunta6]]
-</tw-passagedata><tw-passagedata pid="11" name="Feedback6" tags="" position="1375,350" size="100,100">### Retorno da Situação 6
+</tw-passagedata><tw-passagedata pid="11" name="Feedback6" tags="" position="1375,350" size="100,100">### Feedback de empatia
 &lt;div class=&quot;feedback-box&quot;&gt;$feedbackAtual&lt;/div&gt;
 
 [[Avançar para a Próxima Pergunta-&gt;Pergunta7]]
-</tw-passagedata><tw-passagedata pid="12" name="Feedback7" tags="" position="1500,350" size="100,100">### Retorno da Situação 7
+</tw-passagedata><tw-passagedata pid="12" name="Feedback7" tags="" position="1500,350" size="100,100">### Feedback de empatia
 &lt;div class=&quot;feedback-box&quot;&gt;$feedbackAtual&lt;/div&gt;
 
 [[Avançar para a Próxima Pergunta-&gt;Pergunta8]]
-</tw-passagedata><tw-passagedata pid="13" name="Feedback8" tags="" position="1625,350" size="100,100">### Retorno da Situação 8
+</tw-passagedata><tw-passagedata pid="13" name="Feedback8" tags="" position="1625,350" size="100,100">### Feedback de empatia
 &lt;div class=&quot;feedback-box&quot;&gt;$feedbackAtual&lt;/div&gt;
 
 [[Avançar para a Próxima Pergunta-&gt;Pergunta9]]
-</tw-passagedata><tw-passagedata pid="14" name="Feedback9" tags="" position="1750,350" size="100,100">### Retorno da Situação 9
+</tw-passagedata><tw-passagedata pid="14" name="Feedback9" tags="" position="1750,350" size="100,100">### Feedback de empatia
 &lt;div class=&quot;feedback-box&quot;&gt;$feedbackAtual&lt;/div&gt;
 
 [[Avançar para a Próxima Pergunta-&gt;Pergunta10]]
@@ -421,19 +442,22 @@ Um colega de sala começou a faltar muito, postar frases de despedida ou desâni
 &lt;&lt;link &quot;Esperar o sumiço passar, pensando que cada um tem seus altos e baixos.&quot;&gt;&gt;
     &lt;&lt;set $pontosEmpatia to $pontosEmpatia + 0&gt;&gt;
     &lt;&lt;set $feedbackAtual to &quot;Não espere. O isolamento e frases de desânimo frequentes são pedidos silenciosos de socorro. Intervir cedo faz toda a diferença antes que o quadro piore.&quot;&gt;&gt;
+	&lt;&lt;set $gabaritoAluno to $gabaritoAluno + &quot;Q4:Neutra | &quot;&gt;&gt;
     &lt;&lt;goto &quot;Feedback4&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 
 &lt;&lt;link &quot;Chamar no privado, acolher sem julgar e sinalizar ao Depae ou família.&quot;&gt;&gt;
     &lt;&lt;set $pontosEmpatia to $pontosEmpatia + 10&gt;&gt;
     &lt;&lt;set $feedbackAtual to &quot;Atitude heroica! Oferecer escuta sem julgamento e acionar a rede de apoio da instituição (coordenação/psicologia) pode evitar o pior. A empatia salva vidas.&quot;&gt;&gt;
+	&lt;&lt;set $gabaritoAluno to $gabaritoAluno + &quot;Q4:Boa | &quot;&gt;&gt;
     &lt;&lt;goto &quot;Feedback4&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 
 &lt;&lt;link &quot;Fazer piada com a situação ou dizer que ele está querendo chamar atenção.&quot;&gt;&gt;
     &lt;&lt;set $pontosEmpatia to $pontosEmpatia - 5&gt;&gt;
     &lt;&lt;set $feedbackAtual to &quot;Jamais faça isso! Minimizar a dor alheia dizendo que é &#39;para chamar atenção&#39; invalida o sofrimento da pessoa e fecha a última porta de saída que ela estava tentando encontrar.&quot;&gt;&gt;
-    &lt;&lt;goto &quot;Feedback4&quot;&gt;&gt;
+    &lt;&lt;set $gabaritoAluno to $gabaritoAluno + &quot;Q4:Ruim | &quot;&gt;&gt;
+	&lt;&lt;goto &quot;Feedback4&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 </tw-passagedata><tw-passagedata pid="16" name="Pergunta5" tags="" position="1125,475" size="100,100">### Pergunta 5 de 17
 Você percebe que um amigo está muito isolado, triste e sem interesse por coisas que antes ele amava há mais de um mês. O que fazer?
@@ -441,38 +465,44 @@ Você percebe que um amigo está muito isolado, triste e sem interesse por coisa
 &lt;&lt;link &quot;Conversar com empatia e sugerir que ele busque ajuda profissional.&quot;&gt;&gt;
     &lt;&lt;set $pontosEmpatia to $pontosEmpatia + 10&gt;&gt;
     &lt;&lt;set $feedbackAtual to &quot;Perfeito! O acolhimento sem julgamentos e o direcionamento para um profissional salvam vidas. Muitas vezes, quem está sofrendo só precisa saber que não está sozinho.&quot;&gt;&gt;
-    &lt;&lt;goto &quot;Feedback5&quot;&gt;&gt;
+    &lt;&lt;set $gabaritoAluno to $gabaritoAluno + &quot;Q5:Boa | &quot;&gt;&gt;
+	&lt;&lt;goto &quot;Feedback5&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 
 &lt;&lt;link &quot;Mudar de assunto ou fingir que não percebeu para não deixá-lo sem graça.&quot;&gt;&gt;
     &lt;&lt;set $pontosEmpatia to $pontosEmpatia + 0&gt;&gt;
     &lt;&lt;set $feedbackAtual to &quot;Pense bem. Ignorar o problema pode fazer o seu amigo se sentir ainda mais invisível e desamparado. Romper o silêncio com carinho é o primeiro passo para o apoio.&quot;&gt;&gt;
+	&lt;&lt;set $gabaritoAluno to $gabaritoAluno + &quot;Q5:Neutra | &quot;&gt;&gt;
     &lt;&lt;goto &quot;Feedback5&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 
 &lt;&lt;link &quot;Dizer que isso é falta de força de vontade e que ele precisa sair mais.&quot;&gt;&gt;
     &lt;&lt;set $pontosEmpatia to $pontosEmpatia - 5&gt;&gt;
     &lt;&lt;set $feedbackAtual to &quot;Gatilho sério! Transtornos mentais não são frescura ou falta de vontade. Dizer isso gera culpa, vergonha e faz com que a pessoa se isole ainda mais com a sua dor.&quot;&gt;&gt;
+	&lt;&lt;set $gabaritoAluno to $gabaritoAluno + &quot;Q5:Ruim | &quot;&gt;&gt;
     &lt;&lt;goto &quot;Feedback5&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 </tw-passagedata><tw-passagedata pid="17" name="Pergunta6" tags="" position="1250,475" size="100,100">### Pergunta 6 de 17
-Se você ou alguém próximo estiver passando por uma crisis severa, com pensamentos de automutilação ou ideação suicida, qual o canal correto?
+Se você ou alguém próximo estiver passando por uma crise severa, com pensamentos de automutilação ou ideias suicidas, qual o canal correto?
 
 &lt;&lt;link &quot;Ligar para o CVV (188) ou ir ao CAPS / UPA mais próxima.&quot;&gt;&gt;
     &lt;&lt;set $pontosEmpatia to $pontosEmpatia + 10&gt;&gt;
     &lt;&lt;set $feedbackAtual to &quot;Informação vital! O CVV (188) oferece apoio gratuito 24h. Postos de saúde (UPA) e o CAPS possuem profissionais preparados para crises severas. Você nunca está sozinho!&quot;&gt;&gt;
+	&lt;&lt;set $gabaritoAluno to $gabaritoAluno + &quot;Q6:Boa | &quot;&gt;&gt;
     &lt;&lt;goto &quot;Feedback6&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 
 &lt;&lt;link &quot;Procurar textos de autoajuda na internet e esperar a crise passar no quarto.&quot;&gt;&gt;
     &lt;&lt;set $pontosEmpatia to $pontosEmpatia + 0&gt;&gt;
     &lt;&lt;set $feedbackAtual to &quot;Insuficiente. Textos de internet ajudam a entender conceitos, mas em momentos de ideação suicida ou automutilação, o suporte humano e profissional especializado é indispensável.&quot;&gt;&gt;
-    &lt;&lt;goto &quot;Feedback6&quot;&gt;&gt;
+    &lt;&lt;set $gabaritoAluno to $gabaritoAluno + &quot;Q6:Neutra | &quot;&gt;&gt;
+	&lt;&lt;goto &quot;Feedback6&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 
 &lt;&lt;link &quot;Isolar-se totalmente e guardar o sofrimento para não virar um fardo.&quot;&gt;&gt;
     &lt;&lt;set $pontosEmpatia to $pontosEmpatia - 5&gt;&gt;
     &lt;&lt;set $feedbackAtual to &quot;Procure ajuda! Guardar o sofrimento para não incomodar os outros aumenta o peso da dor até torná-la insuportável. Compartilhar o fardo divide o peso e abre caminhos.&quot;&gt;&gt;
+	&lt;&lt;set $gabaritoAluno to $gabaritoAluno + &quot;Q6:Ruim | &quot;&gt;&gt;
     &lt;&lt;goto &quot;Feedback6&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 </tw-passagedata><tw-passagedata pid="18" name="Pergunta7" tags="" position="1375,475" size="100,100">### Pergunta 7 de 17
@@ -481,19 +511,22 @@ Faltando poucos minutos para apresentar um trabalho importante, seu coração di
 &lt;&lt;link &quot;Beber uma água correndo e tentar focar em outra coisa até ser chamado.&quot;&gt;&gt;
     &lt;&lt;set $pontosEmpatia to $pontosEmpatia + 0&gt;&gt;
     &lt;&lt;set $feedbackAtual to &quot;Ajuda pouco. Beber água correndo não quebra o ciclo físico da ansiedade. Se a respiração continuar curta e rápida, o tremor e o nervosismo vão persistir.&quot;&gt;&gt;
+	&lt;&lt;set $gabaritoAluno to $gabaritoAluno + &quot;Q7:Neutra | &quot;&gt;&gt;
     &lt;&lt;goto &quot;Feedback7&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 
 &lt;&lt;link &quot;Sair correndo do local e desistir da apresentação para sumir com o desconforto.&quot;&gt;&gt;
     &lt;&lt;set $pontosEmpatia to $pontosEmpatia - 5&gt;&gt;
     &lt;&lt;set $feedbackAtual to &quot;Fuga prejudicial! Fugir da situação resolve o medo por 5 minutos, mas aumenta o tamanho do monstro para a próxima vez, além de prejudicar sua nota e sua autoconfiança.&quot;&gt;&gt;
+	&lt;&lt;set $gabaritoAluno to $gabaritoAluno + &quot;Q7:Ruim | &quot;&gt;&gt;
     &lt;&lt;goto &quot;Feedback7&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 
 &lt;&lt;link &quot;Praticar uma técnica de respiração guiada (como inspirar em 4 tempos e expirar em 4).&quot;&gt;&gt;
     &lt;&lt;set $pontosEmpatia to $pontosEmpatia + 10&gt;&gt;
     &lt;&lt;set $feedbackAtual to &quot;Excelente! Exercícios de respiração mandam uma mensagem direta ao cérebro de que você está seguro. Isso desacelera os batimentos cardíacos e devolve o controle do corpo.&quot;&gt;&gt;
-    &lt;&lt;goto &quot;Feedback7&quot;&gt;&gt;
+    &lt;&lt;set $gabaritoAluno to $gabaritoAluno + &quot;Q7:Boa | &quot;&gt;&gt;
+	&lt;&lt;goto &quot;Feedback7&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;</tw-passagedata><tw-passagedata pid="19" name="Pergunta8" tags="" position="1500,475" size="100,100">### Pergunta 8 de 17
 Você acumulou muitas matérias, o prazo dos trabalhos está chegando e a ansiedade travou seus estudos. Qual a melhor saída?
 
@@ -501,19 +534,22 @@ Você acumulou muitas matérias, o prazo dos trabalhos está chegando e a ansied
 &lt;&lt;link &quot;Seguir estudando do jeito que dá, mesmo sem conseguir fixar o conteúdo.&quot;&gt;&gt;
     &lt;&lt;set $pontosEmpatia to $pontosEmpatia + 0&gt;&gt;
     &lt;&lt;set $feedbackAtual to &quot;Produtividade tóxica. Estudar sem conseguir fixar nada gera frustração e perda de tempo. Às vezes, o caminho mais rápido para render é dar uma pausa de 15 minutos.&quot;&gt;&gt;
+    &lt;&lt;set $gabaritoAluno to $gabaritoAluno + &quot;Q8:Neutra | &quot;&gt;&gt;
     &lt;&lt;goto &quot;Feedback8&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 
 &lt;&lt;link &quot;Dividir o estudo em blocos pequenos e pedir ajuda a professores ou colegas.&quot;&gt;&gt;
     &lt;&lt;set $pontosEmpatia to $pontosEmpatia + 10&gt;&gt;
     &lt;&lt;set $feedbackAtual to &quot;Boa estratégia! Dividir uma tarefa grande em pedaços menores engana a procrastinação e reduz o estresse. Pedir ajuda demonstra maturidade acadêmica e emocional.&quot;&gt;&gt;
-    &lt;&lt;goto &quot;Feedback8&quot;&gt;&gt;
+    &lt;&lt;set $gabaritoAluno to $gabaritoAluno + &quot;Q8:Boa | &quot;&gt;&gt;
+	&lt;&lt;goto &quot;Feedback8&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 
 &lt;&lt;link &quot;Virar noites acordado à base de energético e café para focar.&quot;&gt;&gt;
     &lt;&lt;set $pontosEmpatia to $pontosEmpatia - 5&gt;&gt;
     &lt;&lt;set $feedbackAtual to &quot;Cuidado! Privação de sono combinada com energéticos destrói sua saúde física e mental. O desempenho acadêmico despenca junto com o seu bem-estar.&quot;&gt;&gt;
-    &lt;&lt;goto &quot;Feedback8&quot;&gt;&gt;
+    &lt;&lt;set $gabaritoAluno to $gabaritoAluno + &quot;Q8:Ruim | &quot;&gt;&gt;
+	&lt;&lt;goto &quot;Feedback8&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 
 </tw-passagedata><tw-passagedata pid="20" name="Pergunta9" tags="" position="1625,475" size="100,100">### Pergunta 9 de 17
@@ -523,19 +559,22 @@ Um professor ou chefe de estágio faz uma crítica dura sobre o seu desempenho e
 &lt;&lt;link &quot;Ficar chateado no momento, mas aceitar o feedback em silêncio para evitar conflito.&quot;&gt;&gt;
     &lt;&lt;set $pontosEmpatia to $pontosEmpatia + 0&gt;&gt;
     &lt;&lt;set $feedbackAtual to &quot;Pense a respeito. Aceitar tudo engolindo o choro evita o conflito externo, mas gera um conflito interno de mágoa. É saudável tirar dúvidas sobre o feedback com o professor.&quot;&gt;&gt;
+	&lt;&lt;set $gabaritoAluno to $gabaritoAluno + &quot;Q9:Neutra | &quot;&gt;&gt;
     &lt;&lt;goto &quot;Feedback9&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 
 &lt;&lt;link &quot;Separar a sua identidade daquela crítica, avaliar os pontos úteis e focar em melhorar.&quot;&gt;&gt;
     &lt;&lt;set $pontosEmpatia to $pontosEmpatia + 10&gt;&gt;
     &lt;&lt;set $feedbackAtual to &quot;Maturidade pura! Inteligência emocional é entender que o feedback é sobre o seu trabalho atual, não sobre quem você é. Isso permite evoluir sem se destruir psicologicamente.&quot;&gt;&gt;
-    &lt;&lt;goto &quot;Feedback9&quot;&gt;&gt;
+    &lt;&lt;set $gabaritoAluno to $gabaritoAluno + &quot;Q9:Boa | &quot;&gt;&gt;
+	&lt;&lt;goto &quot;Feedback9&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 
 &lt;&lt;link &quot;Entrar em desespero, achar que você não serve para nada e abandonar a matéria.&quot;&gt;&gt;
     &lt;&lt;set $pontosEmpatia to $pontosEmpatia - 5&gt;&gt;
     &lt;&lt;set $feedbackAtual to &quot;Reação extrema! Abandonar tudo por causa de uma crítica impede seu crescimento. Erros e correções fazem parte do processo de aprendizagem de qualquer estudante.&quot;&gt;&gt;
-    &lt;&lt;goto &quot;Feedback9&quot;&gt;&gt;
+    &lt;&lt;set $gabaritoAluno to $gabaritoAluno + &quot;Q9:Ruim | &quot;&gt;&gt;
+	&lt;&lt;goto &quot;Feedback9&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 </tw-passagedata><tw-passagedata pid="21" name="Pergunta10" tags="" position="1750,475" size="100,100">### Pergunta 10 de 17
 Você está na semana de provas, com a ansiedade altíssima. Como a prática de exercícios físicos se relaciona com a sua saúde mental nesse momento?
@@ -543,20 +582,23 @@ Você está na semana de provas, com a ansiedade altíssima. Como a prática de 
 &lt;&lt;link &quot;Serve como uma distração rápida para você esquecer dos estudos por algumas horas.&quot;&gt;&gt;
     &lt;&lt;set $pontosEmpatia to $pontosEmpatia + 0&gt;&gt;
     &lt;&lt;set $feedbackAtual to &quot;Visão limitada. O exercício faz muito mais do que distrair: ele altera a química do seu cérebro, melhorando a neuroplasticidade, a memória e a qualidade do seu foco.&quot;&gt;&gt;
+	&lt;&lt;set $gabaritoAluno to $gabaritoAluno + &quot;Q10:Neutra | &quot;&gt;&gt;
     &lt;&lt;goto &quot;Feedback10&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 
 &lt;&lt;link &quot;É uma perda de tempo, já que gastar energia física te deixará cansado demais para estudar.&quot;&gt;&gt;
     &lt;&lt;set $pontosEmpatia to $pontosEmpatia - 5&gt;&gt;
     &lt;&lt;set $feedbackAtual to &quot;Mito total! O cansaço físico do exercício é relaxante para a mente. Deixar de se mexer aumenta o estresse físico, piorando as dores musculares e a ansiedade na hora de estudar.&quot;&gt;&gt;
+	&lt;&lt;set $gabaritoAluno to $gabaritoAluno + &quot;Q10:Ruim | &quot;&gt;&gt;
     &lt;&lt;goto &quot;Feedback10&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 
 &lt;&lt;link &quot;Libera endorfina e dopamina, reduzindo o cortisol e ajudando a clarear a mente.&quot;&gt;&gt;
     &lt;&lt;set $pontosEmpatia to $pontosEmpatia + 10&gt;&gt;
     &lt;&lt;set $feedbackAtual to &quot;Cientificamente comprovado! O exercício queima o excesso de adrenalina e cortisol acumulados pelo estresse dos estudos. Funciona como um remédio natural para acalmar a mente.&quot;&gt;&gt;
+	&lt;&lt;set $gabaritoAluno to $gabaritoAluno + &quot;Q10:Boa | &quot;&gt;&gt;
     &lt;&lt;goto &quot;Feedback10&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;</tw-passagedata><tw-passagedata pid="22" name="Feedback11" tags="" position="750,600" size="100,100">### Retorno da Situação 11
+&lt;&lt;/link&gt;&gt;</tw-passagedata><tw-passagedata pid="22" name="Feedback11" tags="" position="750,600" size="100,100">### Feedback de empatia
 &lt;div class=&quot;feedback-box&quot;&gt;$feedbackAtual&lt;/div&gt;
 
 [[Avançar para a Próxima Pergunta-&gt;Pergunta12]]
@@ -566,45 +608,51 @@ Seus amigos te convidam para uma festa na véspera de uma entrega importante. Vo
 &lt;&lt;link &quot;Reconhecer seus limites físicos e mentais, recusar o convite gentilmente e priorizar seu descanso.&quot;&gt;&gt;
     &lt;&lt;set $pontosEmpatia to $pontosEmpatia + 10&gt;&gt;
     &lt;&lt;set $feedbackAtual to &quot;Grande passo! Dizer &#39;não&#39; para os outros quando você precisa dizer &#39;sim&#39; para o seu descanso é um dos maiores atos de inteligência emocional e amor-próprio que existem.&quot;&gt;&gt;
+	&lt;&lt;set $gabaritoAluno to $gabaritoAluno + &quot;Q12:Boa | &quot;&gt;&gt;
     &lt;&lt;goto &quot;Feedback12&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 
 &lt;&lt;link &quot;Ir à festa para não chatear o grupo, mas voltar cedo e dormir mal pensando na entrega.&quot;&gt;&gt;
     &lt;&lt;set $pontosEmpatia to $pontosEmpatia + 0&gt;&gt;
     &lt;&lt;set $feedbackAtual to &quot;Cuidado com a pressão. Ir apenas para agradar o grupo faz você não aproveitar a festa e ainda entregar um trabalho ruim. Amigos de verdade entendem quando precisamos recusar.&quot;&gt;&gt;
-    &lt;&lt;goto &quot;Feedback12&quot;&gt;&gt;
+    &lt;&lt;set $gabaritoAluno to $gabaritoAluno + &quot;Q12:Neutra | &quot;&gt;&gt;
+	&lt;&lt;goto &quot;Feedback12&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 
 &lt;&lt;link &quot;Ir para a festa, beber para esquecer o estresse e deixar para fazer o trabalho minutos antes do prazo.&quot;&gt;&gt;
     &lt;&lt;set $pontosEmpatia to $pontosEmpatia - 5&gt;&gt;
     &lt;&lt;set $feedbackAtual to &quot;Auto-sabotagem! Usar o álcool ou a festa para fugir da responsabilidade só empurra a bola de neve ladeira abaixo. O estresse ao fazer o trabalho correndo será multiplicado por dez.&quot;&gt;&gt;
-    &lt;&lt;goto &quot;Feedback12&quot;&gt;&gt;
+    &lt;&lt;set $gabaritoAluno to $gabaritoAluno + &quot;Q12:Ruim | &quot;&gt;&gt;
+	&lt;&lt;goto &quot;Feedback12&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
-</tw-passagedata><tw-passagedata pid="24" name="Feedback10" tags="" position="625,600" size="100,100">### Retorno da Situação 10
+</tw-passagedata><tw-passagedata pid="24" name="Feedback10" tags="" position="625,600" size="100,100">### Feedback de empatia
 &lt;div class=&quot;feedback-box&quot;&gt;$feedbackAtual&lt;/div&gt;
 
 [[Avançar para a Próxima Pergunta-&gt;Pergunta11]]
 </tw-passagedata><tw-passagedata pid="25" name="Pergunta11" tags="" position="625,725" size="100,100">### Pergunta 11 de 17
-Passar dias comendo apenas ultraprocessados, fast-food e muito açúcar para &quot;ganhar tempo&quot; nos estudos afeta a mente de que forma?
+Passar dias comendo apenas ultraprocessados, comida da lanchonete e muito açúcar para &quot;ganhar tempo&quot; nos estudos afeta a mente de que forma?
 
 &lt;&lt;link &quot;Não afeta a mente, desde que você compense tomando vitaminas em cápsula.&quot;&gt;&gt;
     &lt;&lt;set $pontosEmpatia to $pontosEmpatia + 0&gt;&gt;
     &lt;&lt;set $feedbackAtual to &quot;Não se engane. Vitaminas sintéticas não anulam os danos inflamatórios causados pelo excesso de açúcar e gordura ruim na sua microbiota intestinal. O cérebro sente o impacto.&quot;&gt;&gt;
+	&lt;&lt;set $gabaritoAluno to $gabaritoAluno + &quot;Q11:Neutra | &quot;&gt;&gt;
     &lt;&lt;goto &quot;Feedback11&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 
 &lt;&lt;link &quot;Prejudica a microbiota intestinal, reduzindo a produção de serotonina e piorando o humor.&quot;&gt;&gt;
     &lt;&lt;set $pontosEmpatia to $pontosEmpatia + 10&gt;&gt;
-    &lt;&lt;set $feedbackAtual to &quot;Incrível! Cerca de 90% da serotonina (neurotransmissor do bem-estar) é produzida no intestino. Cuidar do que você come é cuidar diretamente do seu humor e disposição.&quot;&gt;&gt;
-    &lt;&lt;goto &quot;Feedback11&quot;&gt;&gt;
+    &lt;&lt;set $feedbackAtual to &quot;Incrível! Cerca de 90% da serotonina (neurotransmissor do bem-estar) é produzida no intestino. Cuidar do que você come é cuidar diretamente do seu humor e disposição.&quot;&gt;&gt;		
+    &lt;&lt;set $gabaritoAluno to $gabaritoAluno + &quot;Q11:Boa | &quot;&gt;&gt;
+	&lt;&lt;goto &quot;Feedback11&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 
 &lt;&lt;link &quot;Melhora o foco e dá a energia imediata que o cérebro precisa para passar a noite estudando.&quot;&gt;&gt;
     &lt;&lt;set $pontosEmpatia to $pontosEmpatia - 5&gt;&gt;
     &lt;&lt;set $feedbackAtual to &quot;Ilusão energética! O açúcar dá um pico de energia de 20 minutos, seguido por uma queda brusca que gera preguiça, névoa mental, irritabilidade e mais ansiedade.&quot;&gt;&gt;
-    &lt;&lt;goto &quot;Feedback11&quot;&gt;&gt;
+    &lt;&lt;set $gabaritoAluno to $gabaritoAluno + &quot;Q11:Ruim | &quot;&gt;&gt;
+	&lt;&lt;goto &quot;Feedback11&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
-</tw-passagedata><tw-passagedata pid="26" name="Feedback12" tags="" position="875,600" size="100,100">### Retorno da Situação 12
+</tw-passagedata><tw-passagedata pid="26" name="Feedback12" tags="" position="875,600" size="100,100">### Feedback de empatia
 &lt;div class=&quot;feedback-box&quot;&gt;$feedbackAtual&lt;/div&gt;
 
 [[Avançar para a Próxima Pergunta-&gt;Pergunta13]]
@@ -614,21 +662,24 @@ Um colega de quarto ou de sala está visivelmente irritado, respondendo a todos 
 &lt;&lt;link &quot;Ficar na sua e se afastar do colega até que o mau humor dele passe sozinho.&quot;&gt;&gt;
     &lt;&lt;set $pontosEmpatia to $pontosEmpatia + 0&gt;&gt;
     &lt;&lt;set $feedbackAtual to &quot;Postura defensiva. Afastar-se protege você temporariamente, o que é válido se você também estiver esgotado. Mas, se tiver energia, estender a mão pode fazer a diferença na vida dele.&quot;&gt;&gt;
+	&lt;&lt;set $gabaritoAluno to $gabaritoAluno + &quot;Q13:Neutra | &quot;&gt;&gt;
     &lt;&lt;goto &quot;Feedback13&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 
 &lt;&lt;link &quot;Entender que a raiva dele pode ser um reflexo de sobrecarga interna e oferecer escuta ativa.&quot;&gt;&gt;
     &lt;&lt;set $pontosEmpatia to $pontosEmpatia + 10&gt;&gt;
     &lt;&lt;set $feedbackAtual to &quot;Muita empatia! Compreender que as pessoas costumam transbordar aquilo que estão vivendo por dentro evita conflitos desnecessários e ajuda a construir ambientes mais acolhedores.&quot;&gt;&gt;
-    &lt;&lt;goto &quot;Feedback13&quot;&gt;&gt;
+    &lt;&lt;set $gabaritoAluno to $gabaritoAluno + &quot;Q13:Boa | &quot;&gt;&gt;
+	&lt;&lt;goto &quot;Feedback13&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 
 &lt;&lt;link &quot;Responder com a mesma agressividade para mostrar que ele não pode te tratar mal.&quot;&gt;&gt;
     &lt;&lt;set $pontosEmpatia to $pontosEmpatia - 5&gt;&gt;
     &lt;&lt;set $feedbackAtual to &quot;Combustível no fogo! Responder com agressividade cria um ciclo tóxico de brigas na sala ou na república. A raiva dele raramente é sobre você; não leve para o lado pessoal.&quot;&gt;&gt;
-    &lt;&lt;goto &quot;Feedback13&quot;&gt;&gt;
+    &lt;&lt;set $gabaritoAluno to $gabaritoAluno + &quot;Q13:Ruim | &quot;&gt;&gt;
+	&lt;&lt;goto &quot;Feedback13&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
-</tw-passagedata><tw-passagedata pid="28" name="Feedback13" tags="" position="1000,600" size="100,100">### Retorno da Situação 13
+</tw-passagedata><tw-passagedata pid="28" name="Feedback13" tags="" position="1000,600" size="100,100">### Feedback de empatia
 &lt;div class=&quot;feedback-box&quot;&gt;$feedbackAtual&lt;/div&gt;
 
 [[Avançar para a Próxima Pergunta-&gt;Pergunta14]]
@@ -638,20 +689,23 @@ Você costuma passar as últimas horas da noite assistindo a séries ou rolando 
 &lt;&lt;link &quot;Você demora um pouco mais para dormir, mas o cérebro acaba se acostumando com o tempo.&quot;&gt;&gt;
     &lt;&lt;set $pontosEmpatia to $pontosEmpatia + 0&gt;&gt;
     &lt;&lt;set $feedbackAtual to &quot;Quase lá. O corpo até cria mecanismos para lidar com o cansaço, mas a qualidade do sono continua ruim e cobra o preço na sua saúde mental a longo prazo.&quot;&gt;&gt;
-    &lt;&lt;goto &quot;Feedback14&quot;&gt;&gt;
+    &lt;&lt;set $gabaritoAluno to $gabaritoAluno + &quot;Q14:Neutra | &quot;&gt;&gt;
+	&lt;&lt;goto &quot;Feedback14&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 
 &lt;&lt;link &quot;O uso de telas relaxa o cérebro cansado e funciona como um ótimo calmante natural para o sono.&quot;&gt;&gt;
     &lt;&lt;set $pontosEmpatia to $pontosEmpatia - 5&gt;&gt;
     &lt;&lt;set $feedbackAtual to &quot;Cuidado! As telas causam hiperestímulo no cérebro através de cores, sons e luzes. Elas fazem exatamente o oposto de relaxar, mantendo você em estado de alerta.&quot;&gt;&gt;
+	&lt;&lt;set $gabaritoAluno to $gabaritoAluno + &quot;Q14:Ruim | &quot;&gt;&gt;
     &lt;&lt;goto &quot;Feedback14&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 
 &lt;&lt;link &quot;A luz azul bloqueia a melatonina, gerando um sono superficial que aumenta a ansiedade no dia seguinte.&quot;&gt;&gt;
     &lt;&lt;set $pontosEmpatia to $pontosEmpatia + 10&gt;&gt;
     &lt;&lt;set $feedbackAtual to &quot;Boa! A luz azul dos aparelhos avisa ao cérebro que ainda é dia, sabotando o descanso profundo. Um sono ruim é combustível para a ansiedade e o desânimo.&quot;&gt;&gt;
-    &lt;&lt;goto &quot;Feedback14&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;</tw-passagedata><tw-passagedata pid="30" name="Feedback14" tags="" position="1125,600" size="100,100">### Retorno da Situação 14
+    &lt;&lt;set $gabaritoAluno to $gabaritoAluno + &quot;Q14:Boa | &quot;&gt;&gt;
+	&lt;&lt;goto &quot;Feedback14&quot;&gt;&gt;
+&lt;&lt;/link&gt;&gt;</tw-passagedata><tw-passagedata pid="30" name="Feedback14" tags="" position="1125,600" size="100,100">### Feedback de empatia
 &lt;div class=&quot;feedback-box&quot;&gt;$feedbackAtual&lt;/div&gt;
 
 [[Avançar para a Próxima Pergunta-&gt;Pergunta15]]
@@ -661,29 +715,32 @@ Seu celular vibra ou acende a tela a cada poucos minutos com notificações de m
 &lt;&lt;link &quot;Você se distrai por poucos segundos, mas consegue retomar o raciocínio no mesmo nível de antes.&quot;&gt;&gt;
     &lt;&lt;set $pontosEmpatia to $pontosEmpatia + 0&gt;&gt;
     &lt;&lt;set $feedbackAtual to &quot;Mito! Estudos mostram que o cérebro humano leva até 20 minutos para recuperar o foco total após uma única distração. Você está gastando energia extra sem perceber.&quot;&gt;&gt;
-    &lt;&lt;goto &quot;Feedback15&quot;&gt;&gt;
+    &lt;&lt;set $gabaritoAluno to $gabaritoAluno + &quot;Q15:Neutra | &quot;&gt;&gt;
+	&lt;&lt;goto &quot;Feedback15&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 
 &lt;&lt;link &quot;O cérebro sofre com interrupções que destroem a concentração, gerando cansaço mental e irritabilidade.&quot;&gt;&gt;
     &lt;&lt;set $pontosEmpatia to $pontosEmpatia + 10&gt;&gt;
     &lt;&lt;set $feedbackAtual to &quot;Muito bem! Cada notificação gera um pico de dopamina rápida que vicia o cérebro. Alternar o foco toda hora gasta o triplo de energia mental, gerando estresse e exaustão.&quot;&gt;&gt;
-    &lt;&lt;goto &quot;Feedback15&quot;&gt;&gt;
+    &lt;&lt;set $gabaritoAluno to $gabaritoAluno + &quot;Q15:Boa | &quot;&gt;&gt;
+	&lt;&lt;goto &quot;Feedback15&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 
 &lt;&lt;link &quot;Melhora a agilidade mental, tornando você uma pessoa multitarefa capaz de fazer tudo ao mesmo tempo.&quot;&gt;&gt;
     &lt;&lt;set $pontosEmpatia to $pontosEmpatia - 5&gt;&gt;
     &lt;&lt;set $feedbackAtual to &quot;Falso! O cérebro não faz duas tarefas complexas ao mesmo tempo; ele apenas salta rapidamente de uma para a outra. O resultado disso é um trabalho superficial e uma mente esgotada.&quot;&gt;&gt;
-    &lt;&lt;goto &quot;Feedback15&quot;&gt;&gt;
+    &lt;&lt;set $gabaritoAluno to $gabaritoAluno + &quot;Q15:Ruim | &quot;&gt;&gt;
+	&lt;&lt;goto &quot;Feedback15&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
-</tw-passagedata><tw-passagedata pid="32" name="Feedback15" tags="" position="1250,600" size="100,100">### Retorno da Situação 15
+</tw-passagedata><tw-passagedata pid="32" name="Feedback15" tags="" position="1250,600" size="100,100">### Feedback de empatia
 &lt;div class=&quot;feedback-box&quot;&gt;$feedbackAtual&lt;/div&gt;
 
 [[Avançar para a Próxima Pergunta-&gt;Pergunta16]]
-</tw-passagedata><tw-passagedata pid="33" name="Feedback16" tags="" position="1375,600" size="100,100">### Retorno da Situação 16
+</tw-passagedata><tw-passagedata pid="33" name="Feedback16" tags="" position="1375,600" size="100,100">### Feedback de empatia
 &lt;div class=&quot;feedback-box&quot;&gt;$feedbackAtual&lt;/div&gt;
 
 [[Avançar para a Próxima Pergunta-&gt;Pergunta17]]
-</tw-passagedata><tw-passagedata pid="34" name="Feedback17" tags="" position="1500,600" size="100,100">### Retorno da Situação 17
+</tw-passagedata><tw-passagedata pid="34" name="Feedback17" tags="" position="1500,600" size="100,100">### Feedback de empatia
 &lt;div class=&quot;feedback-box&quot;&gt;$feedbackAtual&lt;/div&gt;
 
 [[Finalizar e Ver o Ranking Global-&gt;SalvarERanking]]
@@ -693,19 +750,22 @@ Você prefere passar os finais de semana jogando ou conversando por texto em com
 &lt;&lt;link &quot;Enfraquece os laços sociais reais e o suporte emocional presencial, aumentando o risco de depressão.&quot;&gt;&gt;
     &lt;&lt;set $pontosEmpatia to $pontosEmpatia + 10&gt;&gt;
     &lt;&lt;set $feedbackAtual to &quot;Perfeito! O contato físico, o abraço, o olhar e a convivência real liberam ocitocina (o hormônio do vínculo). A tecnologia deve complementar nossas relações, nunca substituir o olho no olho.&quot;&gt;&gt;
-    &lt;&lt;goto &quot;Feedback16&quot;&gt;&gt;
+    &lt;&lt;set $gabaritoAluno to $gabaritoAluno + &quot;Q16:Boa | &quot;&gt;&gt;
+	&lt;&lt;goto &quot;Feedback16&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 
 &lt;&lt;link &quot;Não há riscos, desde que as interações online sejam frequentes e os amigos virtuais sejam legais.&quot;&gt;&gt;
     &lt;&lt;set $pontosEmpatia to $pontosEmpatia + 0&gt;&gt;
     &lt;&lt;set $feedbackAtual to &quot;Pense bem. Amigos virtuais são ótimos, mas em momentos de crise severa, ter uma rede de apoio física e local (família, amigos de perto) faz toda a diferença para a segurança emocional.&quot;&gt;&gt;
-    &lt;&lt;goto &quot;Feedback16&quot;&gt;&gt;
+    &lt;&lt;set $gabaritoAluno to $gabaritoAluno + &quot;Q16:Neutra | &quot;&gt;&gt;
+	&lt;&lt;goto &quot;Feedback16&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 
 &lt;&lt;link &quot;É a melhor escolha, pois as relações virtuais são mais seguras e livres de qualquer tipo de conflito.&quot;&gt;&gt;
     &lt;&lt;set $pontosEmpatia to $pontosEmpatia - 5&gt;&gt;
     &lt;&lt;set $feedbackAtual to &quot;Cuidado com o isolamento! Evitar o mundo real para fugir de conflitos impede o desenvolvimento da sua inteligência emocional e cria uma bolha de solidão perigosa.&quot;&gt;&gt;
-    &lt;&lt;goto &quot;Feedback16&quot;&gt;&gt;
+    &lt;&lt;set $gabaritoAluno to $gabaritoAluno + &quot;Q16:Ruim | &quot;&gt;&gt;
+	&lt;&lt;goto &quot;Feedback16&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 </tw-passagedata><tw-passagedata pid="36" name="Pergunta17" tags="" position="1375,725" size="100,100">### Pergunta 17 de 17
 Ao navegar no Instagram ou TikTok, você sente que a vida de todo mundo é perfeita e a sua é um fracasso, gerando forte angústia. O que fazer?
@@ -713,64 +773,56 @@ Ao navegar no Instagram ou TikTok, você sente que a vida de todo mundo é perfe
 &lt;&lt;link &quot;Continuar consumindo os conteúdos, mas tentando lembrar que aquilo é filtro.&quot;&gt;&gt;
     &lt;&lt;set $pontosEmpatia to $pontosEmpatia + 0&gt;&gt;
     &lt;&lt;set $feedbackAtual to &quot;Difícil na prática. Mesmo sabendo racionalmente que existem filtros, o nosso subconsciente continua comparando as realidades. Essa comparação silenciosa mina sua autoestima.&quot;&gt;&gt;
-    &lt;&lt;goto &quot;Feedback17&quot;&gt;&gt;
+    &lt;&lt;set $gabaritoAluno to $gabaritoAluno + &quot;Q17:Neutra | &quot;&gt;&gt;
+	&lt;&lt;goto &quot;Feedback17&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 
 &lt;&lt;link &quot;Passar mais horas focado naquelas vidas para tentar imitar o estilo deles.&quot;&gt;&gt;
     &lt;&lt;set $pontosEmpatia to $pontosEmpatia - 5&gt;&gt;
     &lt;&lt;set $feedbackAtual to &quot;Caminho para a frustração! Cobrar-se para atingir um padrão de vida perfeito e irreal gera ansiedade crônica. Foque na sua própria evolução e realidade.&quot;&gt;&gt;
-    &lt;&lt;goto &quot;Feedback17&quot;&gt;&gt;
+    &lt;&lt;set $gabaritoAluno to $gabaritoAluno + &quot;Q17:Ruim | &quot;&gt;&gt;
+	&lt;&lt;goto &quot;Feedback17&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 
 &lt;&lt;link &quot;Silenciar ou dar uma pausa em contas que fazem você se sentir mal.&quot;&gt;&gt;
     &lt;&lt;set $pontosEmpatia to $pontosEmpatia + 10&gt;&gt;
     &lt;&lt;set $feedbackAtual to &quot;Mandou bem! Você tem o controle sobre o que consome. Proteger sua saúde mental significa limpar o seu feed de perfis que despertam gatilhos de inferioridade.&quot;&gt;&gt;
-    &lt;&lt;goto &quot;Feedback17&quot;&gt;&gt;
+    &lt;&lt;set $gabaritoAluno to $gabaritoAluno + &quot;Q17:Boa | &quot;&gt;&gt;
+	&lt;&lt;goto &quot;Feedback17&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;</tw-passagedata><tw-passagedata pid="37" name="SalvarERanking" tags="" position="1500,725" size="100,100">:: SalvarERanking
 &lt;div style=&quot;text-align: center; padding: 20px;&quot;&gt;
     &lt;h3&gt;📊 Sincronizando com o Diário de Classe...&lt;/h3&gt;
     &lt;p&gt;Aguarde um instante enquanto registramos sua pontuação online de forma segura.&lt;/p&gt;
-    
-    &lt;!-- Um efeito simples de carregamento visual para o aluno esperar --&gt;
-    &lt;div style=&quot;width: 100%; background-color: #f3f3f3; border-radius: 10px; margin-top: 20px;&quot;&gt;
-        &lt;div style=&quot;width: 70%; background-color: #fab005; height: 10px; border-radius: 10px; animation: progress 2s ease-in-out;&quot;&gt;&lt;/div&gt;
-    &lt;/div&gt;
 &lt;/div&gt;
 
 &lt;&lt;script&gt;&gt;
-    /* Captura os dados das variáveis de forma limpa */
     let url = State.variables.urlGoogleForm;
     let entryN = State.variables.entryNome;
     let entryP = State.variables.entryPontos;
+    let entryG = State.variables.entryGabarito;
     let nome = State.variables.nomeJogador;
     let pontos = State.variables.pontosEmpatia;
+    let gabarito = State.variables.gabaritoAluno;
     
-    /* Executa as funções de gravação */
-    setup.enviarDiretoParaPlanilha(url, entryN, entryP, nome, pontos);
+    /* Dispara o envio completo */
+    setup.enviarDiretoParaPlanilha(url, entryN, entryP, entryG, nome, pontos, gabarito);
     setup.salvarAlunoNoNavegador(nome, pontos);
     
-    /* Aumentamos o tempo para 2.5 segundos para garantir que o pacote de internet chegue ao Google Sheets */
     setTimeout(function() {
         Engine.play(&quot;ResultadoFinal&quot;);
     }, 2500);
 &lt;&lt;/script&gt;&gt;
-
-&lt;style&gt;
-@keyframes progress {
-    0% { width: 0%; }
-    100% { width: 100%; }
-}
-&lt;/style&gt;
 </tw-passagedata><tw-passagedata pid="38" name="ResultadoFinal" tags="" position="550,875" size="100,100">
-! 📊 Relatório Final de Desempenho
+! 📊 Relatório de Desempenho
 
-Parabéns, **$nomeJogador**! Você concluiu todas as etapas do quiz. Seu desempenho foi enviado direto para o diário de classe do professor.
+Parabéns, **$nomeJogador**! Você concluiu todas as etapas do quiz. Seu desempenho foi enviado ao Ranking.
 
 Sua Pontuação Final nesta rodada: **$pontosEmpatia** / 170 pontos.
 
+Elaborado em conjunto pela Coordenação de Orientação Educacional e pela Psicologia 
 ---
 
-### 👑 TOP 10 (Painel dos Melhores Alunos)
+### 👑 TOP 10 (Painel das melhores pontuações)
 &lt;div style=&quot;background: #fffde6; padding: 20px; border-radius: 12px; border: 2px solid #ffd700; color: #333; margin-bottom: 20px;&quot;&gt;
     &lt;&lt;print setup.gerarListaTop10HTML()&gt;&gt;
 &lt;/div&gt;
@@ -783,7 +835,7 @@ Sua Pontuação Final nesta rodada: **$pontosEmpatia** / 170 pontos.
 &lt;&lt;elseif $pontosEmpatia gte 100&gt;&gt;
 💙 **Consciente e Atento (Nota A):** Muito bom! Suas escolhas priorizam a saúde física e emocional, apesar de ter tomado algumas atitudes neutras ou superficiais no percurso.
 &lt;&lt;else&gt;&gt;
-🌱 **Em Aprendizado (Nota B):** Suas respostas indicaram escolhas prejudiciais ou que ignoram sinais importantes de estresse e isolamento. Use o que aprendeu nos feedbacks para mudar hábitos na sua vida cotidiana real!
+🌱 **Em Aprendizado (Nota B):** Suas respostas indicaram escolhas prejudiciais ou que ignoram sinais importantes de estresse e isolamento. Use o que aprendeu nos feedbacks para mudar hábitos na sua vida cotidiana real.Se precisar, procure a equipe do Depae para conversar!
 &lt;&lt;/if&gt;&gt;
 
 ---
