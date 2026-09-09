@@ -319,6 +319,7 @@ Digite seu Nome e Turma para começar:
 </tw-passagedata><tw-passagedata pid="2" name="StoryInit" tags="" position="750,225" size="100,100">&lt;&lt;set $nomeJogador to &quot;&quot;&gt;&gt;
 &lt;&lt;set $pontosEmpatia to 0&gt;&gt;
 &lt;&lt;set $feedbackAtual to &quot;&quot;&gt;&gt;
+&lt;&lt;set $gabaritoAluno to &quot;&quot;&gt;&gt;
 
 &lt;&lt;set $urlGoogleForm to &quot;https://docs.google.com/forms/d/e/1FAIpQLScy8rYReH7ykoIysOqPOzb--0VyXSZ54NICekLOE1_cjs7Kag/formResponse&quot;&gt;&gt;
 &lt;&lt;set $entryNome to &quot;entry.587358728&quot;&gt;&gt;
@@ -331,21 +332,21 @@ Quando você se sente extremamente sobrecarregado com as tarefas do dia a dia, q
 &lt;&lt;link &quot;Pausar, respirar fundo e organizar as tarefas por prioridade.&quot;&gt;&gt;
     &lt;&lt;set $pontosEmpatia to $pontosEmpatia + 10&gt;&gt;
     &lt;&lt;set $feedbackAtual to &quot;Excelente! Fazer uma pausa e organizar as prioridades acalma sua mente...&quot;&gt;&gt;
-    &lt;&lt;set $gabaritoAluno to $gabaritoAluno + &quot;Q1:Boa | &quot;&gt;&gt;
+    &lt;&lt;set $gabaritoAluno to $gabaritoAluno + &quot;Q1: Boa | &quot;&gt;&gt;
     &lt;&lt;goto &quot;Feedback1&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 
 &lt;&lt;link &quot;Continuar fazendo tudo no mesmo ritmo até terminar o que puder.&quot;&gt;&gt;
     &lt;&lt;set $pontosEmpatia to $pontosEmpatia + 0&gt;&gt;
     &lt;&lt;set $feedbackAtual to &quot;Atenção. Seguir no mesmo ritmo sem descansar...&quot;&gt;&gt;
-    &lt;&lt;set $gabaritoAluno to $gabaritoAluno + &quot;Q1:Neutra | &quot;&gt;&gt;
+    &lt;&lt;set $gabaritoAluno to $gabaritoAluno + &quot;Q1: Neutra | &quot;&gt;&gt;
     &lt;&lt;goto &quot;Feedback1&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 
 &lt;&lt;link &quot;Ignorar o cansaço e tomar estimulantes para trabalhar sem parar.&quot;&gt;&gt;
     &lt;&lt;set $pontosEmpatia to $pontosEmpatia - 5&gt;&gt;
     &lt;&lt;set $feedbackAtual to &quot;Muito perigoso! Mascarar o cansaço com estimulantes...&quot;&gt;&gt;
-    &lt;&lt;set $gabaritoAluno to $gabaritoAluno + &quot;Q1:Ruim | &quot;&gt;&gt;
+    &lt;&lt;set $gabaritoAluno to $gabaritoAluno + &quot;Q1: Ruim | &quot;&gt;&gt;
     &lt;&lt;goto &quot;Feedback1&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 </tw-passagedata><tw-passagedata pid="4" name="Feedback1" tags="" position="750,350" size="100,100">### Feedback de empatia
